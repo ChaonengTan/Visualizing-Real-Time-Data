@@ -8,9 +8,13 @@ export default function render(frequencyArray, ctx, width, height) {
 	const step = width / frequencyArray.length
 
     // draws visualizer
+    const maxModifier = x => x/255*height
 	frequencyArray.forEach((val, i) => {
         ctx.beginPath()
-        
+        // previous value
+        ctx.moveTo(step * i-1, maxModifier(frequencyArray[i-1])/2 + height/2)
+        // move to current value
+        ctx.lineTo(step * i, -maxModifier(val)/2 + height/2)
         ctx.stroke()
 	})
 }

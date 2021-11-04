@@ -7,5 +7,10 @@ export default function render(frequencyArray, ctx, width, height) {
     // px per step
 	const step = width / frequencyArray.length
 
-    
+    // draws visualizer
+	frequencyArray.forEach((val, i) => {
+        ctx.beginPath()
+        
+        ctx.stroke()
+	})
 }

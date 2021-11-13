@@ -11,30 +11,24 @@ export default function render(frequencyArray, ctx, width, height) {
 
     // draws visualizer
     const maxModifier = x => x/255*height
-	frequencyArray.forEach((val, i) => {
-        // left base
-        if(i<base) {
-            ctx.beginPath()
-            ctx.moveTo(bW * i, maxModifier(frequencyArray[i])/2 + height)
-            ctx.lineTo(bW * i, -maxModifier(val)/2 + height)
-            ctx.lineWidth = '3'
-            ctx.strokeStyle = `hsl(${140 - val}, 100%, 50%)`
-            ctx.stroke()
-        }
-        // right base
-        if(i<base) {
-            ctx.beginPath()
-            ctx.moveTo(width - bW * i, maxModifier(frequencyArray[i])/2 + height)
-            ctx.lineTo(width - bW * i, -maxModifier(val)/2 + height)
-            ctx.lineWidth = '3'
-            ctx.strokeStyle = `hsl(${140 - val}, 100%, 50%)`
-            ctx.stroke()
-        }
+    const baseDrawer = (x, val, i, stroke) => {
         ctx.beginPath()
-        // previous value
+        ctx.moveTo(x, maxModifier(frequencyArray[i])/2 + height)
+        ctx.lineTo(x, -maxModifier(val)/2 + height)
+        ctx.lineWidth = `${stroke}`
+        ctx.strokeStyle = `hsl(${140 - val}, 100%, 50%)`
+        ctx.stroke()
+    }
+	frequencyArray.forEach((val, i) => {
+        // drawBase
+        i<base && baseDrawer(bW * i, val, i, 3)
+        i<base && baseDrawer(width - bW * i, val, i, 3)
+
+        // mainVisualizer
+        ctx.beginPath()
         ctx.moveTo(step * i-1, maxModifier(frequencyArray[i])/2 + height/2)
-        // move to current value
         ctx.lineTo(step * i, -maxModifier(val)/2 + height/2)
+        
         ctx.strokeStyle = `hsl(${140 - val}, 100%, 50%)`
         ctx.lineWidth = '1'
         ctx.stroke()

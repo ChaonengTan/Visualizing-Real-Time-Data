@@ -38,6 +38,15 @@ pauseButton.addEventListener('click', (e) => {
 
 
 // --------------------------------------------------------
+// Upload 
+const audioFile = document.getElementById('audioFile')
+let aFile
+audioFile.addEventListener('change', (e) => {
+	const audioFile = document.getElementById('audioFile').files[0]
+	aFile = URL.createObjectURL(audioFile)
+})
+
+// --------------------------------------------------------
 // Audio setup
 
 // Defime some variables 
@@ -54,9 +63,13 @@ function startAudio() {
 	
 	// Define a source sound file 
 	// You can replace this with your own file
-	audio.src = 'bird-whistling-a.wav'
-	// audio.src = 'log-sine-sweep.wav'
-
+	if (aFile) {
+		audio.src = aFile
+	} else {
+		audio.src = 'bird-whistling-a.wav'
+		// audio.src = 'log-sine-sweep.wav'
+	}
+	
 	// Make a new analyser
 	analyser = audioContext.createAnalyser()
 	// Connect the analyser and the audio

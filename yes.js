@@ -12,20 +12,31 @@ export default function render(frequencyArray, ctx, width, height) {
     // draws visualizer
     const maxModifier = x => x/255*height
 	frequencyArray.forEach((val, i) => {
-        ctx.beginPath()
+        // left base
         if(i<base) {
-            ctx.moveTo(bW * i-1, maxModifier(frequencyArray[i-1])/2 + height)
+            ctx.beginPath()
+            ctx.moveTo(bW * i, maxModifier(frequencyArray[i])/2 + height)
             ctx.lineTo(bW * i, -maxModifier(val)/2 + height)
-            ctx.moveTo(width - bW * i-1, maxModifier(frequencyArray[i-1])/2 + height)
-            ctx.lineTo(width - bW * i, -maxModifier(val)/2 + height)
-            ctx.closePath()
+            ctx.lineWidth = '3'
+            ctx.strokeStyle = `hsl(${140 - val}, 100%, 50%)`
+            ctx.stroke()
         }
-        
+        // right base
+        if(i<base) {
+            ctx.beginPath()
+            ctx.moveTo(width - bW * i, maxModifier(frequencyArray[i])/2 + height)
+            ctx.lineTo(width - bW * i, -maxModifier(val)/2 + height)
+            ctx.lineWidth = '3'
+            ctx.strokeStyle = `hsl(${140 - val}, 100%, 50%)`
+            ctx.stroke()
+        }
+        ctx.beginPath()
         // previous value
-        ctx.moveTo(step * i-1, maxModifier(frequencyArray[i-1])/2 + height/2)
+        ctx.moveTo(step * i-1, maxModifier(frequencyArray[i])/2 + height/2)
         // move to current value
         ctx.lineTo(step * i, -maxModifier(val)/2 + height/2)
-        ctx.strokeStyle = `hsl(${90-90 / height * val}, 100%, 50%)`
+        ctx.strokeStyle = `hsl(${140 - val}, 100%, 50%)`
+        ctx.lineWidth = '1'
         ctx.stroke()
 	})
 }

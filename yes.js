@@ -1,6 +1,10 @@
-export default function render(frequencyArray, ctx, width, height) {
+export default function render(frequencyArray, ctx, width, height, duration, startTime) {
+    // create time
+    const currentTime = new Date()
+    const timePassed = (currentTime-startTime)/1000
+
 	// clears canvas
-	ctx.fillStyle = 'white'
+	ctx.fillStyle = 'black'
 	ctx.fillRect(0, 0, width, height)
 	ctx.fill()
 
@@ -10,6 +14,8 @@ export default function render(frequencyArray, ctx, width, height) {
     const bW = width / base
 
     // draws visualizer
+
+    // helperFunctions
     const maxModifier = x => x/255*height
     const baseDrawer = (x, val, i, stroke) => {
         ctx.beginPath()
@@ -20,10 +26,23 @@ export default function render(frequencyArray, ctx, width, height) {
         ctx.stroke()
     }
     const maxCol = x => x<0 ? 0 : x
+
+    // primary drawer
 	frequencyArray.forEach((val, i) => {
-        // drawBase
-        i<base && baseDrawer(bW * i, val, i, 3)
-        i<base && baseDrawer(width - bW * i, val, i, 3)
+        // drawTimeLine
+        ctx.beginPath()
+        ctx.moveTo(0, height/40)
+        ctx.lineTo(width, height/40)
+        ctx.lineWidth = '3'
+        ctx.strokeStyle = 'white'
+        ctx.stroke()
+        // drawTime
+        ctx.beginPath()
+        ctx.moveTo(width/(duration/timePassed), 0)
+        ctx.lineTo(width/(duration/timePassed), height/20)
+        ctx.lineWidth = '3'
+        ctx.strokeStyle = 'white'
+        ctx.stroke()
 
         // mainVisualizer
         ctx.beginPath()
@@ -33,5 +52,8 @@ export default function render(frequencyArray, ctx, width, height) {
         ctx.strokeStyle = `hsl(${maxCol(140 - val)}, 100%, 50%)`
         ctx.lineWidth = '1'
         ctx.stroke()
+        // drawBase
+        i<base && baseDrawer(bW * i, val, i, 3)
+        i<base && baseDrawer(width - bW * i, val, i, 3)
 	})
 }

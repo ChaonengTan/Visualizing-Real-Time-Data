@@ -13,7 +13,7 @@ import verticalBarsMonoRenderer from './verticalBarsMonoRenderer.js'
 import radialRayRenderer from './radialRayRenderer.js'
 import yes from './yes.js'
 
-
+const reader = new FileReader()
 // --------------------------------------------------------
 // Canvas
 
@@ -39,11 +39,20 @@ pauseButton.addEventListener('click', (e) => {
 
 // --------------------------------------------------------
 // Upload 
-const audioFile = document.getElementById('audioFile')
-let aFile
-audioFile.addEventListener('change', (e) => {
-	const audioFile = document.getElementById('audioFile').files[0]
-	aFile = URL.createObjectURL(audioFile)
+const audioUpload = document.getElementById('audioUpload')
+let audioFile
+let audioURL
+let duration
+audioUpload.addEventListener('change', (e) => {
+	audioFile = document.getElementById('audioUpload').files[0]
+	audioURL = URL.createObjectURL(audioFile)
+    reader.onload = event => {
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        audioContext.decodeAudioData(event.target.result, buffer => {
+            duration = buffer.duration;
+        })
+    }
+	reader.readAsArrayBuffer(audioFile);
 })
 
 // --------------------------------------------------------
@@ -54,6 +63,7 @@ let analyser
 let frequencyArray
 let audio
 
+let startTime
 // Starts playing the audio
 function startAudio() {
 	// make a new Audio Object
@@ -63,8 +73,8 @@ function startAudio() {
 	
 	// Define a source sound file 
 	// You can replace this with your own file
-	if (aFile) {
-		audio.src = aFile
+	if (audioURL) {
+		audio.src = audioURL
 	} else {
 		audio.src = 'bird-whistling-a.wav'
 		// audio.src = 'log-sine-sweep.wav'
@@ -83,7 +93,7 @@ function startAudio() {
 	
 	// Start playing the audio
 	audio.play()
-
+	startTime = new Date()
 	requestAnimationFrame(render)
 }
 
@@ -102,7 +112,7 @@ function render() {
 	// circleCenterRenderer(frequencyArray, ctx, centerX, centerY)
 	// circleGridRenderer(frequencyArray, ctx, 300, 300)
 	// circleRenderer(frequencyArray, ctx, centerX, centerY, radius)
-	yes(frequencyArray, ctx, 500, 500)
+	yes(frequencyArray, ctx, 500, 500, duration, startTime)
 	
 	// Set up the next animation frame
 	requestAnimationFrame(render)

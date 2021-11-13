@@ -89,7 +89,7 @@ function render() {
 	// circleCenterRenderer(frequencyArray, ctx, centerX, centerY)
 	// circleGridRenderer(frequencyArray, ctx, 300, 300)
 	// circleRenderer(frequencyArray, ctx, centerX, centerY, radius)
-	yes(frequencyArray, ctx, 300, 300)
+	yes(frequencyArray, ctx, 500, 500)
 	
 	// Set up the next animation frame
 	requestAnimationFrame(render)

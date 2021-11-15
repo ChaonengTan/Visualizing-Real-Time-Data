@@ -1,4 +1,4 @@
-export default function render(frequencyArray, ctx, width, height, duration, startTime) {
+export default function render(frequencyArray, ctx, width, height, duration, startTime, maxVol=255) {
     // create time
     const currentTime = new Date()
     const timePassed = (currentTime-startTime)/1000
@@ -16,20 +16,20 @@ export default function render(frequencyArray, ctx, width, height, duration, sta
     // draws visualizer
 
     // helperFunctions
-    const maxModifier = x => x/255*height
+    const maxModifier = x => x/maxVol*height
     const baseDrawer = (x, val, i, stroke) => {
         ctx.beginPath()
-        ctx.moveTo(x, maxModifier(frequencyArray[i])/2 + height)
-        ctx.lineTo(x, -maxModifier(val)/2 + height)
+        ctx.moveTo(x, maxModifier(frequencyArray[i])/4 + height)
+        ctx.lineTo(x, -maxModifier(val)/4 + height)
         ctx.lineWidth = `${stroke}`
-        ctx.strokeStyle = `hsl(${maxCol(140 - val)}, 100%, 50%)`
+        ctx.strokeStyle = `hsl(${maxCol(140 - 140*(val/maxVol))}, 100%, 50%)`
         ctx.stroke()
     }
     const maxCol = x => x<0 ? 0 : x
 
     // primary drawer
 	frequencyArray.forEach((val, i) => {
-        // drawTimeLine
+        // drawLine
         ctx.beginPath()
         ctx.moveTo(0, height/40)
         ctx.lineTo(width, height/40)
@@ -46,10 +46,10 @@ export default function render(frequencyArray, ctx, width, height, duration, sta
 
         // mainVisualizer
         ctx.beginPath()
-        ctx.moveTo(step * i-1, maxModifier(frequencyArray[i])/2 + height/2)
-        ctx.lineTo(step * i, -maxModifier(val)/2 + height/2)
+        ctx.moveTo(step * i-1, maxModifier(frequencyArray[i])/4 + height/2)
+        ctx.lineTo(step * i, -maxModifier(val)/4 + height/2)
 
-        ctx.strokeStyle = `hsl(${maxCol(140 - val)}, 100%, 50%)`
+        ctx.strokeStyle = `hsl(${maxCol(140 - 140*(val/maxVol))}, 100%, 50%)`
         ctx.lineWidth = '1'
         ctx.stroke()
         // drawBase
